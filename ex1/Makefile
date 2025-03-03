@@ -1,7 +1,7 @@
 CC=gcc
 
 main: main.o fast_trigo.o 
-	$(CC) -o main main.o fast_trigo.o
+	$(CC) -o main main.o fast_trigo.o -lm
 
 main.o: main.c fast_trigo.h
 	$(CC) -c main.c 
