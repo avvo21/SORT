@@ -111,9 +111,16 @@ ItemType* Find(LIST l, ItemType item) {
 
 /* Inserisce un elemento nella prima posizione della lista */
 LIST EnqueueFirst(LIST l, ItemType item) {
-    assert(FALSE);
+    NODE* new_node = createNode(item);
 
-    /* TODO */
+    if (isEmpty(l)){
+        l = new_node;
+    } else {
+        LIST oldFirst = l;
+
+        l = new_node;
+        l->next = oldFirst;
+    }
 
     return l;
 }
@@ -138,10 +145,22 @@ LIST EnqueueLast(LIST l, ItemType item) {
 
 /* Inserisce un elemento mantenendo la lista ordinata */
 LIST EnqueueOrdered(LIST l, ItemType item) {
-    assert(FALSE);
-    
-    /* TODO */
+    NODE* new_node = createNode(item);
 
+    if (isEmpty(l)) {
+        /* Lista vuota: inserimento in testa */
+        l = new_node;
+    } else {
+        LIST tmp = l;
+
+        while(!isEmpty(tmp->next) && itemCompare(tmp->next->item, item) < 0)
+            tmp = tmp->next;
+        
+        LIST tmpNext = tmp->next;
+        new_node->next = tmpNext;
+        tmp->next = new_node;
+    }
+    
     return l;
 }
 
@@ -158,9 +177,16 @@ LIST DequeueFirst(LIST l) {
 /* Toglie l'ultimo elemento della lista (se non e' vuota) */
 LIST DequeueLast(LIST l) {
     if (!isEmpty(l)) {
-        assert(FALSE);
+        LIST tmp = l;
+        LIST tmpPrev = NULL;
 
-        /* TODO */
+        while (!isEmpty(tmp->next)){
+            tmpPrev = tmp;
+            tmp = tmp->next;
+        }
+
+        tmpPrev->next = tmp->next;
+        deleteNode(tmp);  
     }
 
     return l;

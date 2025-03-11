@@ -86,6 +86,33 @@ int main(int argc, char* argv[]) {
     PrintList(mylist);
     printf("]\n");
 
+    i.value = 6.9;
+    mylist = EnqueueOrdered(mylist, i);
+
+    printf("Contenuto della lista: [");
+    PrintList(mylist);
+    printf("]\n");
+
+    i.value = 1.0;
+    mylist = EnqueueOrdered(mylist, i);
+
+    printf("Contenuto della lista: [");
+    PrintList(mylist);
+    printf("]\n");
+
+    mylist = DequeueLast(mylist);
+
+    printf("Contenuto della lista: [");
+    PrintList(mylist);
+    printf("]\n");
+
+    mylist = DequeueLast(mylist);
+
+    printf("Contenuto della lista: [");
+    PrintList(mylist);
+    printf("]\n");
+
+
     printf("Fase di Distruzione dati\n");
     mylist = DeleteList(mylist);
 
