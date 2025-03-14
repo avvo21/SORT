@@ -100,6 +100,13 @@ int main(int argc, char* argv[]) {
     PrintList(mylist);
     printf("]\n");
 
+    i.value = 9.0;
+    mylist = EnqueueFirst(mylist, i);
+
+    printf("Contenuto della lista: [");
+    PrintList(mylist);
+    printf("]\n");
+
     mylist = DequeueLast(mylist);
 
     printf("Contenuto della lista: [");

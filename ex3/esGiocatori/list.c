@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "list.h"
 
@@ -10,15 +11,10 @@
     - ritorna un valore >0 se item1 > item2;
     - ritorna un valore <0 se item1 < item2;
     - ritorna un valore ==0 se item1 == item2.
-NB: puo' essere utilizzata nelle funzioni di ricerca e/o ordinamento
+    NB: puo' essere utilizzata nelle funzioni di ricerca e/o ordinamento
 */
 int itemCompare(ItemType item1, ItemType item2) {
-    if (item1.value > item2.value) /*** esempio ***/
-        return 1;
-    else if (item1.value < item2.value) /*** esempio ***/
-        return -1;
-    else
-        return 0;
+    return strcmp(item1.name, item2.name);
 }
 
 /* alloca un nuovo nodo per la lista, copiandone all'interno l'elemento item */
@@ -94,11 +90,11 @@ ItemType getTail(LIST l) {
 }
 
 /* Cerca l'elemento item nella lista e ne restituisce il puntatore
-ritorna NULL se non lo trova */
+ ritorna NULL se non lo trova */
 ItemType* Find(LIST l, ItemType item) {
     LIST tmp = l;
     /*if (tmp == NULL) {
-    return NULL;
+        return NULL;
     }*/
     while (tmp != NULL && itemCompare(tmp->item, item) != 0) {
         tmp = tmp->next;
@@ -111,13 +107,11 @@ ItemType* Find(LIST l, ItemType item) {
 
 /* Inserisce un elemento nella prima posizione della lista */
 LIST EnqueueFirst(LIST l, ItemType item) {
-    NODE* new_node = createNode(item);
+    assert(FALSE);
 
-    if (!isEmpty(l)){
-        new_node->next = l;
-    }
+    /* TODO */
 
-    return new_node;
+    return l;
 }
 
 /* Inserisce un elemento nell'ultima posizione della lista */
@@ -140,22 +134,10 @@ LIST EnqueueLast(LIST l, ItemType item) {
 
 /* Inserisce un elemento mantenendo la lista ordinata */
 LIST EnqueueOrdered(LIST l, ItemType item) {
-    NODE* new_node = createNode(item);
-
-    if (isEmpty(l)) {
-        /* Lista vuota: inserimento in testa */
-        l = new_node;
-    } else {
-        LIST tmp = l;
-
-        while(!isEmpty(tmp->next) && itemCompare(tmp->next->item, item) < 0)
-            tmp = tmp->next;
-        
-        LIST tmpNext = tmp->next;
-        new_node->next = tmpNext;
-        tmp->next = new_node;
-    }
+    assert(FALSE);
     
+    /* TODO */
+
     return l;
 }
 
@@ -172,16 +154,9 @@ LIST DequeueFirst(LIST l) {
 /* Toglie l'ultimo elemento della lista (se non e' vuota) */
 LIST DequeueLast(LIST l) {
     if (!isEmpty(l)) {
-        LIST tmp = l;
-        LIST tmpPrev = NULL;
+        assert(FALSE);
 
-        while (!isEmpty(tmp->next)){
-            tmpPrev = tmp;
-            tmp = tmp->next;
-        }
-
-        tmpPrev->next = tmp->next;
-        deleteNode(tmp);  
+        /* TODO */
     }
 
     return l;
@@ -199,7 +174,7 @@ LIST Dequeue(LIST l, ItemType item) {
             LIST tmp = l;
 
             while (!isEmpty(tmp->next) &&
-                itemCompare(tmp->next->item, item) != 0)
+                    itemCompare(tmp->next->item, item) != 0)
                 tmp = tmp->next;
 
             if (!isEmpty(tmp->next)) {
