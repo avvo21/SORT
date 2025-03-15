@@ -93,9 +93,9 @@ ItemType getTail(LIST l) {
  ritorna NULL se non lo trova */
 ItemType* Find(LIST l, ItemType item) {
     LIST tmp = l;
-    /*if (tmp == NULL) {
+    if (tmp == NULL) {
         return NULL;
-    }*/
+    }
     while (tmp != NULL && itemCompare(tmp->item, item) != 0) {
         tmp = tmp->next;
     }
@@ -105,13 +105,29 @@ ItemType* Find(LIST l, ItemType item) {
     return &(tmp->item);
 }
 
+// Funzione per ottenere l'elemento alla posizione specificata
+ItemType* GetItemAt(LIST l, int index) {
+    if (index < 0 || index >= getLength(l)) {
+        fprintf(stderr, "Index out of bounds\n");
+        exit(1);
+    }
+
+    NODE* current = l;
+    for (int i = 0; i < index; i++) {
+        current = current->next;
+    }
+    return &(current->item);
+}
+
 /* Inserisce un elemento nella prima posizione della lista */
 LIST EnqueueFirst(LIST l, ItemType item) {
-    assert(FALSE);
+    NODE* new_node = createNode(item);
 
-    /* TODO */
+    if (!isEmpty(l)){
+        new_node->next = l;
+    }
 
-    return l;
+    return new_node;
 }
 
 /* Inserisce un elemento nell'ultima posizione della lista */
@@ -134,10 +150,22 @@ LIST EnqueueLast(LIST l, ItemType item) {
 
 /* Inserisce un elemento mantenendo la lista ordinata */
 LIST EnqueueOrdered(LIST l, ItemType item) {
-    assert(FALSE);
-    
-    /* TODO */
+    NODE* new_node = createNode(item);
 
+    if (isEmpty(l)) {
+        /* Lista vuota: inserimento in testa */
+        l = new_node;
+    } else {
+        LIST tmp = l;
+
+        while(!isEmpty(tmp->next) && itemCompare(tmp->next->item, item) < 0)
+            tmp = tmp->next;
+        
+        LIST tmpNext = tmp->next;
+        new_node->next = tmpNext;
+        tmp->next = new_node;
+    }
+    
     return l;
 }
 
@@ -154,9 +182,16 @@ LIST DequeueFirst(LIST l) {
 /* Toglie l'ultimo elemento della lista (se non e' vuota) */
 LIST DequeueLast(LIST l) {
     if (!isEmpty(l)) {
-        assert(FALSE);
+        LIST tmp = l;
+        LIST tmpPrev = NULL;
 
-        /* TODO */
+        while (!isEmpty(tmp->next)){
+            tmpPrev = tmp;
+            tmp = tmp->next;
+        }
+
+        tmpPrev->next = tmp->next;
+        deleteNode(tmp);  
     }
 
     return l;
@@ -191,7 +226,7 @@ LIST Dequeue(LIST l, ItemType item) {
 /* Stampa a video un elemento della lista */
 void PrintItem(ItemType item) {
     /*** esempio ***/
-    printf("%f", item.value);
+    printf("\tN:%s - M:%d - P:%d", item.name, item.num_match, item.point);
 }
 
 /* Stampa a video la lista (esegue PrintItem() su tutti gli elementi) */
@@ -202,6 +237,8 @@ void PrintList(LIST l) {
         tmp = tmp->next;
 
         if (!isEmpty(tmp))
-            printf(" ");
+            printf("\n");
     }
 }
+
+

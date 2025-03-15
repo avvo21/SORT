@@ -12,7 +12,6 @@ typedef struct {
     int     num_match;
     int     point;
     int     sockfd;
-    double  value; /*** esempio ***/
 } ItemType;
 
 /* Nodo della lista (per uso interno) */
@@ -55,6 +54,9 @@ ItemType getTail(LIST l);
    ritorna NULL se non lo trova */
 ItemType* Find(LIST l, ItemType item);
 
+// Funzione per ottenere l'elemento alla posizione specificata
+ItemType* GetItemAt(LIST l, int index);
+
 /*** Trasformatori ***/
 
 /* Inserisce un elemento nella prima posizione della lista - TODO */
@@ -82,5 +84,7 @@ void PrintItem(ItemType item);
 
 /* Stampa a video la lista (esegue PrintItem() su tutti gli elementi) */
 void PrintList(LIST l);
+
+
 
 #endif

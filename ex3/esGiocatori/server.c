@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "list.h"
+#include <time.h>
 
 #include <unistd.h>
 #include <netdb.h>
@@ -13,11 +14,22 @@
 int port = 8000;
 
 // Return TRUE if is a new player, FALSE otherwise
-BOOL isNewPlayer(LIST l, ItemType p){
+BOOL isPresentIn(LIST l, ItemType p){
 	return  Find(l,p) == NULL;
 }
 
+void updatePoint(LIST l, ItemType p, int pt){
+	ItemType* player = Find(l, p);
 
+	if(player != NULL){
+		player->point += pt;
+		player->num_match++;
+
+	} else {
+		perror("Error updating points");
+		exit(1);
+	}
+}
 
 int main() 
 {
@@ -59,53 +71,98 @@ int main()
 		exit(1);
 	}
 
-
 	socklen_t address_size = sizeof( cli_addr );	
 	
-    char buf[BUF_SIZE];	
+	char buf[BUF_SIZE];	
 
-	
 
 	while(1) 
-	{
-		printf("\nWaiting for a new connection...\n");
-		
-		// New connection acceptance		
-		int newsockfd = accept( sockfd, (struct sockaddr *)&cli_addr, &address_size );      
-		if (newsockfd == -1) 
-		{
-			perror("Error on accept");
-			exit(1);
+	{	
+		for (int i = 0; i < N; i++){
+
+			printf("\nAspettando un nuovo giocatore...\n");
+			
+			// New connection acceptance		
+			int newsockfd = accept( sockfd, (struct sockaddr *)&cli_addr, &address_size );      
+			if (newsockfd == -1) {
+				perror("Error on accept");
+				exit(1);
+			}
+			
+			bzero(buf, BUF_SIZE);
+			
+			// Message reception
+			if ( recv( newsockfd, buf, BUF_SIZE, 0 ) == -1) {
+				perror("Error on receive");
+				exit(1);
+			}
+
+			ItemType player;
+			strcpy(player.name, buf);
+			player.sockfd = newsockfd;
+
+			printf("%s si è connesso al server\n", player.name);
+
+			if (isPresentIn(history_list, player)){
+				printf("%s è un nuovo giocatore\n", player.name);
+				player.point = 0;
+				player.num_match =0;
+				history_list = EnqueueOrdered(history_list, player);				
+			}
+			
+			waiting_list = EnqueueFirst(waiting_list, player);
+
+			printf("\nLista giocatori:\n");
+			PrintList(history_list);
+			
+			printf("\nIn attesa:\n");
+			PrintList(waiting_list);	
 		}
-		
-		bzero(buf, BUF_SIZE);
-		
-		// Message reception
-		if ( recv( newsockfd, buf, BUF_SIZE, 0 ) == -1) 
-		{
-			perror("Error on receive");
-			exit(1);
+
+		printf("\n\nLimite giocatori per una partita raggiunto\n");
+
+		int waiting_list_length = getLength(waiting_list);
+		int random_index;
+		int pt = 3;
+		int position = 0;
+
+		srand(time(NULL));
+
+        while (waiting_list > 0){
+			
+			random_index = rand() % waiting_list_length;
+			ItemType* random_player = GetItemAt(waiting_list, random_index);
+			position++;
+			updatePoint(history_list, *random_player, pt);
+
+			char msg[50];
+			
+			sprintf(msg, "La tua posizione è %d e hai ottenuto %d\n",position, pt);
+
+			if (send(random_player->sockfd, &msg, sizeof(msg), 0 ) == -1) {
+				perror("Error on send");
+				exit(1);
+			}
+
+			printf(" %s si è posizionato %d: chiudo la socket %d\n", random_player->name,position, random_player->sockfd);
+			close(random_player->sockfd);
+
+			if(pt>0)
+				pt--;
+			
+			waiting_list = Dequeue(waiting_list, *random_player);
+			waiting_list_length--; 
+			
 		}
 
-		printf("Received from client: \"%s\"\n", buf);
+		printf("\nLista aggiornata dopo la partita:\n");
+			PrintList(history_list);
 
-	    /* For this server example, we just convert the characters to upper case */
-
-		int len = strlen(buf);
-		for (int i=0; i<len; i++) 
-			buf[i] = toupper(buf[i]);
-
-		/* This sends the string plus the string terminator '\0' */
-		if ( send( newsockfd, buf, len + 1, 0 ) == -1) 
-		{
-			perror("Error on send");
-			exit(1);
-		}
-
-		close(newsockfd);
 	}
 
 	close(sockfd);
+
+
 	return 0;
 }
 

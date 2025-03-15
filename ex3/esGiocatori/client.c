@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 	}
 
 
-	printf("Sending message \"%s\" to server...\n", str);
+	printf("Inviando la richiesta come \"%s\" al server...\n", str);
 
 	/* This sends the string plus the string terminator '\0' */
 	if ( send(sockfd, str, strlen(str)+1, 0) == -1 ) 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("Message sent. Waiting for response...\n");
+	printf("Richiesta inviata, attendi per i risultati...\n");
 	
 	char buf[BUF_SIZE];	
 	buf[0]='\0';
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	printf("\nResponse from server: \"%s\"\n", buf);
+	printf("\nRisposta del server: \"%s\"\n", buf);
 
 	close(sockfd);
 
