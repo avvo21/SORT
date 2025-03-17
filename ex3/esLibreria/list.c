@@ -209,31 +209,6 @@ LIST Dequeue(LIST l, ItemType item) {
     return l;
 }
 
-LIST DequeueWithSktId(LIST l, ItemType item) {
-    if (!isEmpty(l)) {
-        if (itemCompare(l->item, item) == 0 || (l->item.sockId == item.sockId)) {
-            /* eliminazione dell'elemento in testa */
-            NODE* todel = l;
-            l = l->next;
-            deleteNode(todel);
-        } else {
-            LIST tmp = l;
-
-            while (!isEmpty(tmp->next) &&
-                itemCompare(tmp->next->item, item) != 0)
-                tmp = tmp->next;
-
-            if (!isEmpty(tmp->next)) {
-                /* l'elemento e' stato trovato nella lista (viene eliminato) */
-                NODE* todel = tmp->next;
-                tmp->next = tmp->next->next;
-                deleteNode(todel);
-            }
-        }
-    }
-    return l;
-}
-
 /* Stampa a video un elemento della lista */
 void PrintItem(ItemType item) {
     /*** esempio ***/

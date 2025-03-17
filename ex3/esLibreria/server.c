@@ -128,7 +128,7 @@ int main()
 
 					book_w->amount--;
 	
-					waiting_list = DequeueWithSktId(waiting_list, *book_wl);
+					waiting_list = Dequeue(waiting_list, *book_wl);
 					book_wl = Find(waiting_list, buf_item);
 				}
 				

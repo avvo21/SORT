@@ -77,8 +77,6 @@ LIST DequeueLast(LIST l);
 /* Toglie l'elemento item dalla lista (se e' presente) */
 LIST Dequeue(LIST l, ItemType item);
 
-LIST DequeueWithSktId(LIST l, ItemType item);
-
 /*** Stampe ***/
 
 /* Stampa a video un elemento della lista */
