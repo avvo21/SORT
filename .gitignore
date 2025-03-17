@@ -1,6 +1,3 @@
-# Ignora qualsiasi file senza estensione (potenzialmente eseguibile)
-*
-# Permetti di tenere file con estensione (override della regola sopra)
-!*.*
+
 *.o
 *.json
