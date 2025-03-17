@@ -127,9 +127,15 @@ int main()
 					close(book_wl->sockId);
 
 					book_w->amount--;
+
+					if(book_w->amount <= 0){
+						printf("Libro termintato");
+						warehouse = Dequeue(warehouse, *book_w);
+					}
 	
 					waiting_list = Dequeue(waiting_list, *book_wl);
 					book_wl = Find(waiting_list, buf_item);
+					
 				}
 				
 				break;
@@ -154,6 +160,10 @@ int main()
 					close(newsockfd);
 		
 					book_f->amount--;  // Decremento corretto della quantità
+					if(book_f->amount <= 0){
+						printf("Libro termintato");
+						warehouse = Dequeue(warehouse, *book_f);
+					}
 				}
 				break;
 		
