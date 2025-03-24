@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	if(msg.name != ""){
+	if(strcmp(msg.name, "") != 0){
 		printf("Il gruppo verra guidato da %s\n", msg.name);
 	} else {
 		printf("Purtroppo non ci sono guide adatte al gruppo\n");

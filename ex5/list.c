@@ -13,12 +13,7 @@
 NB: puo' essere utilizzata nelle funzioni di ricerca e/o ordinamento
 */
 int itemCompare(ItemType item1, ItemType item2) {
-    if (item1.patients > item2.patients)
-        return 1;
-    else if (item1.patients < item2.patients)
-        return -1;
-    else
-        return 0;
+    assert(FALSE);
 }
 
 /* alloca un nuovo nodo per la lista, copiandone all'interno l'elemento item */
@@ -216,7 +211,7 @@ LIST Dequeue(LIST l, ItemType item) {
 /* Stampa a video un elemento della lista */
 void PrintItem(ItemType item) {
     /*** esempio ***/
-    printf("\t%s - %d - %d - %d", item.name, item.vax, item.min_req, item.patients);
+    printf("\t%s", item.name);
 }
 
 /* Stampa a video la lista (esegue PrintItem() su tutti gli elementi) */
@@ -231,13 +226,3 @@ void PrintList(LIST l) {
     }
 }
 
-int countPatients(LIST l) {
-    int total = 0;
-    LIST tmp = l;
-    
-    while (!isEmpty(tmp)) {
-        total += tmp->item.patients;
-        tmp = tmp->next;
-    }
-    return total;
-}
