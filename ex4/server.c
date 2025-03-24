@@ -196,7 +196,7 @@ int main()
 				break;	
 			}
 
-			// Modifica nel case TYPE_C:
+			
 			case TYPE_C: { 
 				printf("Richiesta da Cliente: %s - %d\n", msg.name, msg.patients);
 
