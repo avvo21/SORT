@@ -12,9 +12,34 @@
 
 int port = 8000;
 
+ItemType* findGude(int v, LIST guides){
+
+	LIST tmp = guides;
+	ItemType* bestGuide = NULL;
+	int excess = 10000;
+
+	while (!isEmpty(tmp)){
+		/*Controllo se il numero minimo della guida soddisfa il criterio:
+			- Il numero di visitatori minimi deve essere < v
+			- Devo minimizzare il sovrannumero
+		*/
+		if(tmp->item.min_v <= v && tmp->item.max_v >= v && (tmp->item.max_v - v) < excess){
+			excess = tmp->item.max_v - v;
+			bestGuide = &tmp->item;
+		}
+		
+		tmp = tmp->next;
+	}
+
+	return bestGuide;
+
+}
+
 int main() 
 {
 	ItemType msg = {0};
+
+	LIST guides = NewList();
 
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in cli_addr;
@@ -63,8 +88,7 @@ int main()
 		if (newsockfd == -1) {
 			perror("Error on accept");
 			exit(1);
-		} 
-		
+		}
 		
 		// Message reception
 		ssize_t received = recv( newsockfd, &msg, sizeof(msg), 0 );
@@ -74,16 +98,62 @@ int main()
 		}
 
 		msg.sokId = newsockfd;
+
 		switch (msg.type) {
 
 			case TYPE_G: {
-				
+
+				printf("Connessione della guida \"%s\"\n", msg.name);
+				guides = EnqueueFirst(guides, msg);
+
+				printf("La guida è stata messa in attesa\n");
 
 				break;	
 			}
 
 
 			case TYPE_V: { 
+				printf("Gruppo di %d visitatori connesso\n", msg.v);
+
+				ItemType* found_g;
+				found_g = findGude(msg.v, guides);
+
+				if(found_g != NULL){
+					printf("Il visitatore è stato assegnato alla guida %s\n", found_g->name);
+
+					strcpy(msg.name, found_g->name);
+
+					if ( send(msg.sokId, &msg, sizeof(msg), 0) == -1 ) {
+						perror("Error on send\n");
+						exit(1);
+					}
+
+					int g_sockId = found_g->sokId;
+
+					guides = Dequeue(guides, *found_g);
+					
+					if ( send(g_sockId, &msg, sizeof(msg), 0) == -1 ) {
+						perror("Error on send\n");
+						exit(1);
+					}
+
+					close(g_sockId);
+
+				} else {
+					printf("Non è stata trovata nessuna guida\n");
+
+					printf("Invio la richiesta al server...\n");
+
+					strcpy(msg.name, ""); // Messaggio per comunicare al client che non ci sono guide 
+
+					if ( send(msg.sokId, &msg, sizeof(msg), 0) == -1 ) {
+						perror("Error on send\n");
+						exit(1);
+					}
+				}
+
+
+				close(msg.sokId);
 				
 				break;
 			}
@@ -93,6 +163,10 @@ int main()
 				close(newsockfd);
 				break;
 		}
+
+		printf("\nLista guide disponibili:\n");
+		PrintList(guides);
+		printf("\n");
 
 
 	}	

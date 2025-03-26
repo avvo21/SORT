@@ -17,4 +17,5 @@ list.o: list.c list.h
 
 clean:
 	rm -f client server *~
+	rm -f *.o
 

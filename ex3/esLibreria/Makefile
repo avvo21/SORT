@@ -22,5 +22,6 @@ list.o: list.c list.h
 	gcc -Wall -c list.c
 
 clean:
-	rm -f client server *~
+	rm -f client_l client_c server *~
+	rm -f *.o
 

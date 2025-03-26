@@ -10,4 +10,5 @@ fast_trigo.o: fast_trigo.c fast_trigo.h
 	$(CC) -c fast_trigo.c
 
 clean:
-	rm *.o
+	rm -f *.o
+	rm -f main

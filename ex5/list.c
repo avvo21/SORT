@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "list.h"
 
@@ -13,7 +14,7 @@
 NB: puo' essere utilizzata nelle funzioni di ricerca e/o ordinamento
 */
 int itemCompare(ItemType item1, ItemType item2) {
-    assert(FALSE);
+    return strcmp(item1.name, item2.name);    
 }
 
 /* alloca un nuovo nodo per la lista, copiandone all'interno l'elemento item */
@@ -211,7 +212,7 @@ LIST Dequeue(LIST l, ItemType item) {
 /* Stampa a video un elemento della lista */
 void PrintItem(ItemType item) {
     /*** esempio ***/
-    printf("\t%s", item.name);
+    printf("\t%s - %d - %d", item.name, item.min_v, item.max_v);
 }
 
 /* Stampa a video la lista (esegue PrintItem() su tutti gli elementi) */
