@@ -29,11 +29,16 @@ int main()
 		
 		auto last = std::chrono::high_resolution_clock::now();
 		
+		auto t = std::chrono::steady_clock::now(); //T0 -> uso lo steady perchè mi serve la misura come delta e non come orario
+		//Imposto il timer fuori per evitare di perdere tempo dentro al for perchè la misura ha un costo
+
 		for (unsigned int i = 0; i < 100; ++i)
 		{
 			do_some_stuff();
 			
-			std::this_thread::sleep_for(std::chrono::seconds(1));
+			t += std::chrono::seconds(1); // Calcolo il prossimo risveglio
+
+			std::this_thread::sleep_until(t);
 			
 			auto next = std::chrono::high_resolution_clock::now();
 			
