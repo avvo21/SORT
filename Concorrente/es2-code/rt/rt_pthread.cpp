@@ -63,7 +63,9 @@ static void set_priority(pthread_t pthread_id, const priority & p)
 	if (res != 0)
 	{
 		char msg[30];
-		throw permission_error(strerror_r(res, msg, 30));
+		strerror_r(res, msg, 30);
+		throw permission_error(std::string(msg));
+		//throw permission_error(strerror_r(res, msg, 30));
 	}
 }
 

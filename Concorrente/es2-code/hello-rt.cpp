@@ -34,6 +34,15 @@ int main()
 	for(size_t id = 0; id < hello.size(); ++id)
 	{
 		std::thread th(print_char, id, std::ref(b));
+
+		try{
+			rt::priority p(rt::priority::rt_max - id);
+			rt::set_priority(th, p);
+		}
+		catch(rt::permission_error &e){
+			std::cout << "Failed to set priority: " << e.what() << std::endl;
+		}
+
 		threads.push_back(std::move(th));
 	}
 

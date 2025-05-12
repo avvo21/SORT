@@ -76,8 +76,7 @@ int main(int argc, char * argv[])
         size_t end = min((i + 1) * delta, size);
 
         // Passandolo come ref devo stare attento che la sua "vita" duri più dell'esecuzione dei thread
-        thread t(mul_row, start, end, cref(MA), cref(MB), ref(MC), size);
-        th.push_back(std::move(t));
+        th.emplace_back(mul_row, start, end, cref(MA), cref(MB), ref(MC), size);
     }
 	
 	// Anche questa parte è moltiplicazione, non includendola nel tempo avrei solo il lancio dei thread
