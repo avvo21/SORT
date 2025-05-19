@@ -9,7 +9,7 @@
 #include <condition_variable>
 
 // Uncomment to enable RT priorities for threads A & B
-//#define USE_RT_PRIO
+#define USE_RT_PRIO
 
 #ifdef USE_RT_PRIO
 #include "rt/priority.h"
@@ -45,7 +45,7 @@ char do_consumer_stuff(const std::string & name, char data_in)
 }
 
 // Shared data ..............
-std::deque<char> buffer;
+std::deque<char> buffer; 
 std::mutex mutex;
 std::condition_variable cond;
 // ..........................
@@ -57,18 +57,20 @@ void thread_a()
 	while (true)
 	{
 		char data = 0;
-		
-		std::unique_lock<std::mutex> lock(mutex);
 
-		while(buffer.empty())
-			cond.wait(lock);
+		{	// REGIONE CRITICA
+			std::unique_lock<std::mutex> lock(mutex);
 
-		data = buffer.front();
+			while(buffer.empty())
+				cond.wait(lock);
 
-		if (data == EOD)
-			return;
+			data = buffer.front();
+			
+			if (data == EOD)
+				return;
 
-		buffer.pop_front();
+			buffer.pop_front();
+		}
 
 		do_consumer_stuff("Thread A", data);
 	}
@@ -80,14 +82,18 @@ void thread_b()
 	
 	for (auto & v : hello)
 	{
-		std::unique_lock<std::mutex> lock(mutex);
-
-		char data = do_producer_stuff("Thread B", v);
 		
-		buffer.push_back(data);
+		char data = do_producer_stuff("Thread B", v);
 
-		if (!buffer.empty())
-			cond.notify_all();
+		{	// REGIONE CRITICA
+			std::unique_lock<std::mutex> lock(mutex);
+			
+			buffer.push_back(data);
+
+			if (!buffer.empty())
+				cond.notify_all();
+		}
+
 	}
 	
 	std::unique_lock<std::mutex> lock(mutex);
@@ -118,12 +124,14 @@ int main()
 	std::thread th_b(thread_b);	
 	
 #ifdef USE_RT_PRIO
+	
 	rt::set_affinity(th_a, aff);
 	rt::set_affinity(th_b, aff);
 		
 	try
-	{
-		// ...
+	{	
+		rt::set_priority(th_a, --prio);
+		rt::set_priority(th_b, --prio);
 	}
 	catch (rt::permission_error &)
 	{
