@@ -9,13 +9,13 @@
 void phi_think()
 {
 	// Placeholder for "real world" code
-	std::this_thread::sleep_for(std::chrono::seconds(2));
+	std::this_thread::sleep_for(std::chrono::milliseconds(200));
 }
 
 void phi_eat()
 {
 	// Placeholder for "real world" code
-	std::this_thread::sleep_for(std::chrono::seconds(3));
+	std::this_thread::sleep_for(std::chrono::milliseconds(300));
 }
 
 void philosopher_algo(unsigned int id, PhiMonitor & mon)

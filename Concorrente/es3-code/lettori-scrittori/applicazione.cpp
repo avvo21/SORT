@@ -47,14 +47,14 @@ void lettore(RWMonitor & monitor)
 		std::cout << start.str();
 
 		// Placeholder for "real world" code
-		std::this_thread::sleep_for(std::chrono::seconds(2 + uid % NUM_LETTORI));
+		std::this_thread::sleep_for(std::chrono::milliseconds(200 + uid % NUM_LETTORI));
 
 		std::cout << stop.str();
 
 		monitor.runlock();
 
 		// Placeholder for "real world" code
-		std::this_thread::sleep_for(std::chrono::seconds(1 + uid % NUM_LETTORI));
+		std::this_thread::sleep_for(std::chrono::milliseconds(100 + uid % NUM_LETTORI));
 	}
 }
 
@@ -83,14 +83,14 @@ void scrittore(RWMonitor & monitor)
 		std::cout << start.str();
 
 		// Placeholder for "real world" code
-		std::this_thread::sleep_for(std::chrono::seconds(1 + uid % NUM_SCRITTORI));
+		std::this_thread::sleep_for(std::chrono::milliseconds(100 + uid % NUM_SCRITTORI));
 
 		std::cout << stop.str();
 
 		monitor.wunlock();
 
 		// Placeholder for "real world" code
-		std::this_thread::sleep_for(std::chrono::seconds(10 + uid % NUM_SCRITTORI));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10000 + uid % NUM_SCRITTORI));
 	}
 }
 

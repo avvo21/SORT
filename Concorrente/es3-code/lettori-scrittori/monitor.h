@@ -25,8 +25,8 @@ class RWMonitor
 		std::mutex mutex;
 
 		/* decomment for a "strong" monitor */
-		//std::condition_variable read_queue;
-		//std::condition_variable write_queue;
+		std::condition_variable read_queue;
+		std::condition_variable write_queue;
 		
 		/* decomment for a "weak" monitor */
 		//std::condition_variable queue;
