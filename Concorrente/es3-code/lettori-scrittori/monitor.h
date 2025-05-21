@@ -29,7 +29,7 @@ class RWMonitor
 		std::condition_variable write_queue;
 		
 		/* decomment for a "weak" monitor */
-		//std::condition_variable queue;
+		std::condition_variable queue;
 };
 
 #endif
